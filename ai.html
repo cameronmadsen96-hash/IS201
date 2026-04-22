@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NFL Trivia Game</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0b162a;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    #game-container {
+        background: #1f2a44;
+        padding: 25px;
+        border-radius: 12px;
+        width: 480px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+        margin-top: 0;
+        color: #4db8ff;
+    }
+
+    .option-btn {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        padding: 12px;
+        background: #4db8ff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #000;
+        font-weight: bold;
+    }
+
+    .option-btn:hover {
+        background: #76ccff;
+    }
+
+    #score {
+        margin-top: 15px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    #end-message {
+        margin-top: 20px;
+        font-size: 18px;
+        color: #76ff76;
+    }
+</style>
+</head>
+<body>
+
+<div id="game-container">
+    <h1>NFL Trivia</h1>
+    <div id="question"></div>
+    <div id="options"></div>
+    <div id="score"></div>
+    <div id="end-message"></div>
+</div>
+
+<script>
+    // -----------------------------
+    // 50 NFL Trivia Questions
+    // -----------------------------
+    const questions = [
+        { q: "Which QB won Super Bowls with the Colts and Broncos?", options: ["Tom Brady", "Brett Favre", "Peyton Manning", "John Elway"], answer: 2 },
+        { q: "Which team has the most Super Bowl wins?", options: ["Cowboys", "Steelers", "Patriots", "49ers"], answer: 2 },
+        { q: "Who holds the NFL record for most rushing yards?", options: ["Barry Sanders", "Walter Payton", "Emmitt Smith", "Adrian Peterson"], answer: 2 },
+        { q: "Which team completed the only perfect season?", options: ["2007 Patriots", "1972 Dolphins", "1985 Bears", "1999 Rams"], answer: 1 },
+        { q: "Who has the most receiving TDs in NFL history?", options: ["Jerry Rice", "Randy Moss", "Terrell Owens", "Calvin Johnson"], answer: 0 },
+        { q: "Which team drafted Patrick Mahomes?", options: ["Bears", "Chiefs", "Texans", "Jets"], answer: 1 },
+        { q: "Who has the most career sacks?", options: ["Bruce Smith", "Reggie White", "DeMarcus Ware", "J.J. Watt"], answer: 0 },
+        { q: "Which team is known as 'America's Team'?", options: ["Packers", "Cowboys", "Patriots", "Steelers"], answer: 1 },
+        { q: "Who won the first Super Bowl?", options: ["Packers", "Chiefs", "Jets", "Raiders"], answer: 0 },
+        { q: "Which RB is known as 'The Bus'?", options: ["Emmitt Smith", "Jerome Bettis", "LaDainian Tomlinson", "Earl Campbell"], answer: 1 },
+        { q: "Which QB is nicknamed 'Matty Ice'?", options: ["Matt Ryan", "Matt Stafford", "Matt Hasselbeck", "Matt Schaub"], answer: 0 },
+        { q: "Which team did Tom Brady play for after the Patriots?", options: ["49ers", "Buccaneers", "Dolphins", "Broncos"], answer: 1 },
+        { q: "Which WR is known as 'Megatron'?", options: ["Julio Jones", "Calvin Johnson", "Larry Fitzgerald", "Dez Bryant"], answer: 1 },
+        { q: "Which team has a lightning bolt logo?", options: ["Rams", "Chargers", "Titans", "Colts"], answer: 1 },
+        { q: "Who is the NFL's all-time passing TD leader?", options: ["Tom Brady", "Drew Brees", "Peyton Manning", "Brett Favre"], answer: 0 },
+        { q: "Which team plays in Lambeau Field?", options: ["Bears", "Packers", "Vikings", "Lions"], answer: 1 },
+        { q: "Which team drafted Aaron Rodgers?", options: ["49ers", "Packers", "Raiders", "Cowboys"], answer: 1 },
+        { q: "Which team has a pirate ship in its stadium?", options: ["Raiders", "Buccaneers", "Jaguars", "Saints"], answer: 1 },
+        { q: "Who is the NFL's all-time leader in interceptions thrown?", options: ["Favre", "Manning", "Brady", "Marino"], answer: 0 },
+        { q: "Which team has a horned helmet?", options: ["Vikings", "Rams", "Titans", "Bills"], answer: 0 },
+        { q: "Which QB is known for the 'Immaculate Reception' game?", options: ["Bradshaw", "Staubach", "Montana", "Unitas"], answer: 0 },
+        { q: "Which team drafted J.J. Watt?", options: ["Texans", "Packers", "Steelers", "Bears"], answer: 0 },
+                { q: "Which team has a fleur-de-lis logo?", options: ["Saints", "Ravens", "Giants", "Jets"], answer: 0 },
+                { q: "Which RB had the nickname 'Sweetness'?", options: ["Barry Sanders", "Walter Payton", "Bo Jackson", "Eric Dickerson"], answer: 1 },
+                { q: "Which team drafted Joe Burrow?", options: ["Bengals", "Dolphins", "Chargers", "Panthers"], answer: 0 },
+                { q: "Which team has a bird logo?", options: ["Eagles", "Falcons", "Ravens", "All of the above"], answer: 3 },
+                { q: "Which QB guaranteed a Super Bowl win?", options: ["Namath", "Montana", "Elway", "Brady"], answer: 0 },
+                { q: "Which team did Randy Moss NOT play for?", options: ["Vikings", "Patriots", "Raiders", "Cowboys"], answer: 3 },
+                { q: "Which team drafted Larry Fitzgerald?", options: ["Cardinals", "Steelers", "Bears", "Bills"], answer: 0 },
+                { q: "Which QB is known for 'The Catch' game?", options: ["Montana", "Young", "Aikman", "Staubach"], answer: 0 },
+                { q: "Which team drafted Dan Marino?", options: ["Dolphins", "Steelers", "Jets", "Bills"], answer: 0 },
+                { q: "Which team has a horseshoe logo?", options: ["Broncos", "Colts", "Bills", "Giants"], answer: 1 },
+                { q: "Which RB holds the single-season rushing record?", options: ["Dickerson", "Peterson", "Sanders", "Campbell"], answer: 0 },
+                { q: "Which QB is known as 'The Sheriff'?", options: ["Brady", "Manning", "Brees", "Rodgers"], answer: 1 },
+                { q: "Which team drafted Troy Polamalu?", options: ["Steelers", "Ravens", "49ers", "Browns"], answer: 0 },
+                { q: "Which team has a star logo?", options: ["Cowboys", "Texans", "Giants", "Titans"], answer: 0 },
+                { q: "Which QB famously yelled 'Omaha'?", options: ["Brady", "Manning", "Rodgers", "Brees"], answer: 1 },
+                { q: "Which team drafted Justin Jefferson?", options: ["Vikings", "Saints", "Packers", "Bears"], answer: 0 },
+                { q: "Which team drafted Josh Allen?", options: ["Bills", "Jaguars", "Jets", "Broncos"], answer: 0 },
+                { q: "Which team drafted Lamar Jackson?", options: ["Ravens", "Browns", "Dolphins", "Falcons"], answer: 0 },
+                { q: "Which team drafted Aaron Donald?", options: ["Rams", "Steelers", "Bears", "Chargers"], answer: 0 },
+                { q: "Which team drafted Derrick Henry?", options: ["Titans", "Cowboys", "Giants", "Texans"], answer: 0 },
+                { q: "Which team drafted Nick Bosa?", options: ["49ers", "Chargers", "Bears", "Jets"], answer: 0 },
+                { q: "Which team drafted Micah Parsons?", options: ["Cowboys", "Giants", "Eagles", "Commanders"], answer: 0 },
+                { q: "Which team drafted Trevor Lawrence?", options: ["Jaguars", "Jets", "Panthers", "Broncos"], answer: 0 },
+                { q: "Which team drafted C.J. Stroud?", options: ["Texans", "Colts", "Panthers", "Raiders"], answer: 0 },
+                { q: "Which team drafted Joe Montana?", options: ["49ers", "Chiefs", "Raiders", "Bengals"], answer: 0 },
+                { q: "Which team drafted Steve Young?", options: ["Buccaneers", "49ers", "Rams", "Falcons"], answer: 0 }
+            ];
+        
+            // -----------------------------
+            // Game State
+            // -----------------------------
+            let score = 0;
+        
+            const scoreDisplay = document.getElementById("score");
+            const questionDisplay = document.getElementById("question");
+            const optionsDisplay = document.getElementById("options");
+            const endMessage = document.getElementById("end-message");
+        
+            // -----------------------------
+            // Load a New Question
+            // -----------------------------
+            function loadQuestion() {
+                const q = questions[Math.floor(Math.random() * questions.length)];
+        
+                questionDisplay.textContent = "Q: " + q.q;
+                optionsDisplay.innerHTML = "";
+                endMessage.textContent = "";
+        
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.textContent = opt;
+                    btn.onclick = () => handleAnswer(index === q.answer);
+                    optionsDisplay.appendChild(btn);
+                });
+        
+                scoreDisplay.textContent = "Score: " + score;
+            }
+        
+            // -----------------------------
+            // Handle Answer Selection
+            // -----------------------------
+            function handleAnswer(correct) {
+                if (correct) {
+                    score++;
+                } else {
+                    score--;
+                }
+        
+                scoreDisplay.textContent = "Score: " + score;
+        
+                if (score >= 5) {
+                    questionDisplay.textContent = "";
+                    optionsDisplay.innerHTML = "";
+                    endMessage.textContent = "You reached 5 points! Refresh to play again.";
+                    return;
+                }
+        
+                loadQuestion();
+            }
+        
+            // Start Game
+            loadQuestion();
+        </script>
+        
+        </body>
+        </html>
+
